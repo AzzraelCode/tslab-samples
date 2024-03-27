@@ -29,29 +29,43 @@ public class Sma : IExternalScript
         // вьюхи для отрисовки индикаторов не совпадающих по масштабу с графиком цены
         IGraphPane? pane1 = ctx.CreateGraphPane("Pane1", "Pane1");
         pane1.AddList("0", zeroes, ListStyles.LINE, ScriptColors.Gray, LineStyles.DASH, PaneSides.RIGHT);
-        IGraphPane? pane2 = ctx.CreateGraphPane("Pane2", "Pane2");
-        pane2.AddList("0", zeroes, ListStyles.LINE, ScriptColors.Gray, LineStyles.DASH, PaneSides.RIGHT);
-
 
         
-        // 1 Простая Скользящая Средняя
-        IList<double> sma1Upper = Series.SMA(secUpper.ClosePrices, B1);
-        IList<double> sma1 = secUpper.Decompress(sma1Upper);
-        ctx.First.AddList("sma1", sma1, ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);        
+        // *** Простая Скользящая Средняя
+        // IList<double> sma1Upper = Series.SMA(secUpper.ClosePrices, B1);
+        // ctx.First.AddList("sma1", secUpper.Decompress(sma1Upper), ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);        
 
-        // 2 Экспоненциальная скользящая средняя
-        IList<double> sma2Upper = Series.EMA(secUpper.ClosePrices, B2);
-        IList<double> sma2 = secUpper.Decompress(sma2Upper);
-        ctx.First.AddList("sma2", sma2, ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);    
+        // *** Экспоненциальная скользящая средняя
+        // IList<double> sma2Upper = Series.EMA(secUpper.ClosePrices, B2);
+        // ctx.First.AddList("sma2", secUpper.Decompress(sma2Upper), ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);    
 
-        // 3 Стандартное Отклонение от SMA с периодом заданным вторым аргементом
-        IList<double> stDevUpper = Series.StDev(secUpper.ClosePrices, B1);
-        IList<double> stDev = secUpper.Decompress(stDevUpper);
-        pane1.AddList("stDev", stDev, ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);
+        // *** Стандартное Отклонение от SMA с периодом заданным вторым аргементом
+        // IList<double> stDevUpper = Series.StDev(secUpper.ClosePrices, B1);
+        // pane1.AddList("stDev", secUpper.Decompress(stDevUpper), ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);
         
-        // 4 Стандартная Историческая Волатильность от SMA с периодом заданным вторым аргементом
-        IList<double> volatilityUpper = Series.Volatility(secUpper.ClosePrices, B1);
-        IList<double> volatility = secUpper.Decompress(volatilityUpper);
-        pane2.AddList("volatility", volatility, ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);
+        // *** Стандартная Историческая Волатильность от SMA с периодом заданным вторым аргементом
+        // IList<double> volatilityUpper = Series.Volatility(secUpper.ClosePrices, B1);
+        // pane1.AddList("volatility", secUpper.Decompress(volatilityUpper), ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);
+        
+        // *** Полосы Болинжера. Можно получить верхнюю и нижнюю, медиана = Series.SMA(secUpper.ClosePrices, B1)
+        // Volatility Indicator (ta.volatility)
+        // https://school.stockcharts.com/doku.php?id=technical_indicators:bollinger_bands
+        // IList<double> bbTopUpper = Series.BollingerBands(secUpper.ClosePrices, B1, B4, true);
+        // ctx.First.AddList("BB Top Line", secUpper.Decompress(bbTopUpper), ListStyles.LINE, ScriptColors.Green, LineStyles.SOLID, PaneSides.RIGHT); 
+        // IList<double> bbBotUpper = Series.BollingerBands(secUpper.ClosePrices, B1, B4, false);
+        // ctx.First.AddList("BB Bot Line", secUpper.Decompress(bbBotUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT); 
+
+        // *** Average True Range
+        // Volatility Indicator (ta.volatility)
+        // http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_true_range_atr
+        // IList<double>? atrUpper = Series.AverageTrueRange(secUpper.Bars, B1);
+        // pane1.AddList("atr", secUpper.Decompress(atrUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);
+        
+        // *** RSI (Relative Strength Index)
+        // Momentum Indicator (ta.momentum)
+        // https://www.investopedia.com/terms/r/rsi.asp
+        IList<double>? rsiUpper = Series.RSI(secUpper.ClosePrices, B1);
+        pane1.AddList("rsi", secUpper.Decompress(rsiUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);
+        
     }
 }
