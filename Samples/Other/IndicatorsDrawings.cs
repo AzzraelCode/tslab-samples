@@ -32,13 +32,18 @@ public class Sma : IExternalScript
 
         
         // *** Простая Скользящая Средняя
-        // IList<double> sma1Upper = Series.SMA(secUpper.ClosePrices, B1);
-        // ctx.First.AddList("sma1", secUpper.Decompress(sma1Upper), ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);        
+        IList<double> sma1Upper = Series.SMA(secUpper.ClosePrices, B1);
+        ctx.First.AddList("sma1", secUpper.Decompress(sma1Upper), ListStyles.LINE, ScriptColors.Yellow, LineStyles.SOLID, PaneSides.RIGHT);        
 
         // *** Экспоненциальная скользящая средняя
-        // IList<double> sma2Upper = Series.EMA(secUpper.ClosePrices, B2);
+        // IList<double> sma2Upper = Series.EMA(secUpper.ClosePrices, B1);
         // ctx.First.AddList("sma2", secUpper.Decompress(sma2Upper), ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);    
 
+        // *** Адаптивное сглаженное скользящее среднее (AMA, KAMA)
+        // https://school.stockcharts.com/doku.php?id=technical_indicators:kaufman_s_adaptive_moving_average
+        // IList<double> amaUpper = new AMA { Context = ctx, Period = B1, }.Execute(secUpper.ClosePrices);
+        // ctx.First.AddList("AMA", secUpper.Decompress(amaUpper), ListStyles.LINE, ScriptColors.Aqua, LineStyles.SOLID, PaneSides.RIGHT);        
+        
         // *** Стандартное Отклонение от SMA с периодом заданным вторым аргементом
         // IList<double> stDevUpper = Series.StDev(secUpper.ClosePrices, B1);
         // pane1.AddList("stDev", secUpper.Decompress(stDevUpper), ListStyles.LINE, ScriptColors.Blue, LineStyles.SOLID, PaneSides.RIGHT);
@@ -64,8 +69,31 @@ public class Sma : IExternalScript
         // *** RSI (Relative Strength Index)
         // Momentum Indicator (ta.momentum)
         // https://www.investopedia.com/terms/r/rsi.asp
-        IList<double>? rsiUpper = Series.RSI(secUpper.ClosePrices, B1);
-        pane1.AddList("rsi", secUpper.Decompress(rsiUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);
+        // IList<double>? rsiUpper = Series.RSI(secUpper.ClosePrices, B1);
+        // pane1.AddList("rsi", secUpper.Decompress(rsiUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);        
         
+        // *** CCI (Commodity Channel Index)
+        // Trend Indicator (ta.trend)
+        // https://school.stockcharts.com/doku.php?id=technical_indicators:commodity_channel_index_cci
+        // IList<double>? cciUpper = Series.CCI(secUpper.Bars, B1);
+        // pane1.AddList("rsi", secUpper.Decompress(cciUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);  
+        
+        // *** ADX (Average Directional Movement Index)
+        // Trend Indicator (ta.trend)
+        // https://school.stockcharts.com/doku.php?id=technical_indicators:average_directional_index_adx
+        // IList<double>? adxUpper = new ADXFull { Context = ctx, Period = B1, }.Execute(secUpper);
+        // IList<double>? dimUpper = new DIM { Context = ctx, Period = B1, }.Execute(secUpper).Select(x => x * 100.0).ToList();
+        // IList<double>? dipUpper = new DIP { Context = ctx, Period = B1, }.Execute(secUpper).Select(x => x * 100.0).ToList();
+        // pane1.AddList("ADX", secUpper.Decompress(adxUpper), ListStyles.LINE, ScriptColors.Blue, LineStyles.DASH, PaneSides.RIGHT);
+        // pane1.AddList("DIM", secUpper.Decompress(dimUpper), ListStyles.LINE, ScriptColors.Red, LineStyles.SOLID, PaneSides.RIGHT);
+        // pane1.AddList("DIP", secUpper.Decompress(dipUpper), ListStyles.LINE, ScriptColors.Green, LineStyles.SOLID, PaneSides.RIGHT);
+        
+        // *** Aroon 
+        // Trend Indicator (ta.trend)
+        // https://www.investopedia.com/terms/a/aroon.asp
+        IList<double>? aroonUpUpper = new AroonUp() { Context = ctx, Period = B1, }.Execute(secUpper.ClosePrices);
+        IList<double>? aroonDownUpper = new AroonDown() { Context = ctx, Period = B1, }.Execute(secUpper.ClosePrices);
+        pane1.AddList("aroonUp", secUpper.Decompress(aroonUpUpper), ListStyles.LINE, ScriptColors.Aquamarine, LineStyles.SOLID, PaneSides.RIGHT);
+        pane1.AddList("aroonDown", secUpper.Decompress(aroonDownUpper), ListStyles.LINE, ScriptColors.Azure, LineStyles.SOLID, PaneSides.RIGHT);
     }
 }

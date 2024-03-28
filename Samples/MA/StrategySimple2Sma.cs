@@ -9,7 +9,10 @@ using TSLab.Script.Optimization;
 
 namespace Samples.MA;
 
-public class Sma : IExternalScript
+/***
+ * Простой пример торговой стратегии по пересечению SMA
+ */
+public class StrategySimple2Sma : IExternalScript
 {
     // таймфрейм
     public readonly IntOptimProperty A0Tf = new(1440, 10, 200, 60);
